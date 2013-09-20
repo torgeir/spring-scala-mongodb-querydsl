@@ -1,5 +1,7 @@
-project/project/
-project/target
-target
+.DS_Store
+tmp
 .idea
 .idea_modules
+project/project
+project/target
+target
