@@ -3,6 +3,7 @@ import org.springframework.scala.context.function.FunctionalConfigApplicationCon
 object App {
 
   def main (args: Array[String]) = {
+
     val applicationContext = FunctionalConfigApplicationContext[PersonConfiguration]
     val john = applicationContext[Person]
     println(john.firstname)
