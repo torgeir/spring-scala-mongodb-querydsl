@@ -1,16 +1,27 @@
+import com.google.code.morphia.{Datastore, Morphia}
 import com.mongodb.Mongo
-import org.springframework.data.mongodb.core.MongoTemplate
+import gd.wa.Question
 import org.springframework.scala.context.function.{BeanLookupFunction, FunctionalConfiguration}
 
 class MongoConfig extends FunctionalConfiguration {
 
   val mongo: BeanLookupFunction[Mongo] =
-    bean() {
+    singleton() {
       new Mongo("localhost")
     }
 
-  val mongoTemplate: BeanLookupFunction[MongoTemplate] =
-    bean() {
-      new MongoTemplate(mongo(), "questions")
+  val morphia: BeanLookupFunction[Morphia] =
+    singleton() {
+      /** https://github.com/mongodb/morphia/wiki/MappingObjects */
+      new Morphia().map(classOf[Question])
+
+      /** or */
+      //morphia.mapPackage("my.package.with.only.mongo.entities");
+  }
+
+  val datastore: BeanLookupFunction[Datastore] =
+    singleton() {
+      morphia().createDatastore(mongo(), "questions-db")
     }
+
 }
