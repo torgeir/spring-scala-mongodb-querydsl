@@ -7,7 +7,7 @@ object AppBuild extends Build {
   val appVersion = "1.0-SNAPSHOT"
 
   val appDependencies = Seq(
-    "gd.wa" % "querydsl-domain" % "0.0.3-SNAPSHOT",
+    "gd.wa" % "querydsl-domain" % "0.0.1-SNAPSHOT",
 
     /**
      * Querydsl for mongodb
@@ -48,8 +48,8 @@ object AppBuild extends Build {
     id = "root-project",
     base = file("."),
     settings = Project.defaultSettings ++ Seq(
-      libraryDependencies := appDependencies,
-      scalaSource in Compile <<= (sourceDirectory in Compile)(_ / "extra")
+      libraryDependencies := appDependencies
+//      scalaSource in Compile <<= (sourceDirectory in Compile)(_ / "extra")
     ))
     .settings(
     /** changes version of scala */

@@ -1,20 +1,25 @@
 import com.google.code.morphia.{Morphia, Datastore}
 import com.mongodb.WriteConcern
 import com.mysema.query.mongodb.morphia.MorphiaQuery
+import com.mysema.query.types.expr.BooleanExpression
+import com.mysema.query.types.Expression
 import gd.wa._
 
+import org.springframework.data.mongodb.core.MongoOperations
+import org.springframework.data.mongodb.repository.support.MongoRepositoryFactory
 import org.springframework.scala.context.function.FunctionalConfigApplicationContext
+import scala.collection.JavaConverters._
 
 object App {
 
   def main (args: Array[String]) = {
 
-    import com.mysema.query.scala.Helpers._
 
     val applicationContext = FunctionalConfigApplicationContext[MongoConfig]
-    val db: Datastore = applicationContext[Datastore]
+    val mongoOperations = applicationContext[MongoOperations]
 
-    db.delete(db.createQuery(classOf[Question]))
+    val factory: MongoRepositoryFactory = new MongoRepositoryFactory(mongoOperations)
+    val questionRepository: QuestionRepository = factory.getRepository(classOf[QuestionRepository])
 
     def odd(n: Int): Boolean = n % 2 == 0
 
@@ -23,16 +28,19 @@ object App {
 
     Range(1, 100).foreach { n =>
       val question = new Question(s"question-id-$n", n, if (odd(n)) per else torgeir)
-      db.save(question, WriteConcern.NORMAL)
+      questionRepository.save(question)
     }
-    println(s"Saved 100 questions.")
 
-    val query = new MorphiaQuery[Question](applicationContext[Morphia], db, QQuestion)
-    val list: List[Question] = query
-        .where(QQuestion.user.name.equalsIgnoreCase("torgeir")
-           and QQuestion.number > 50)
-        .select
+    import scala.collection.JavaConversions._
 
-    println(s"Torgeir has ${list.size} questions with number > 50")
+    val question: QQuestion = QQuestion.question
+    val questions: Iterable[Question] =
+      questionRepository.findAll(
+        question.user.name.equalsIgnoreCase("torgeir") and question.questionId.contains("2"))
+
+    for (q <- questions) {
+      println(q)
+    }
+
   }
 }
