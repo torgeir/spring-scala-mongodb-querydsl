@@ -1,25 +1,14 @@
-import com.google.code.morphia.{Datastore, Morphia}
-import com.mongodb._
-import gd.wa.Question
-import java.util
-import org.springframework.data.mongodb.core.aggregation.{Aggregation, AggregationResults, TypedAggregation}
-import org.springframework.data.mongodb.core.convert.MongoConverter
-import org.springframework.data.mongodb.core.geo.GeoResults
-import org.springframework.data.mongodb.core.mapreduce.{GroupByResults, GroupBy, MapReduceOptions, MapReduceResults}
-import org.springframework.data.mongodb.core._
-import org.springframework.data.mongodb.core.query.{Criteria, NearQuery, Update, Query}
-import org.springframework.scala.context.function.{BeanLookupFunction, FunctionalConfiguration}
 
-class MongoConfig extends FunctionalConfiguration {
+class MongoConfig {
 
-  val mongo: BeanLookupFunction[Mongo] =
-    singleton() {
-      new Mongo("localhost")
-    }
-
-  val mongoOperations: BeanLookupFunction[MongoOperations] = bean() {
-    new MongoTemplate(mongo(), "questions-db")
-  }
+//  val mongo: BeanLookupFunction[Mongo] =
+//    singleton() {
+//      new Mongo("localhost")
+//    }
+//
+//  val mongoOperations: BeanLookupFunction[MongoOperations] = bean() {
+//    new MongoTemplate(mongo(), "questions-db")
+//  }
 
 //  val morphia: BeanLookupFunction[Morphia] =
 //    singleton() {
