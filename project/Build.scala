@@ -10,7 +10,8 @@ object Build extends Build {
     /** spring scala */
     resolvers += "repo.springsource.org-milestone" at "https://repo.springsource.org/milestone",
     /** play iteratees */
-    resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/repo/",
+//    resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/repo/",
+    resolvers += "Typesafe releases" at "http://repo.typesafe.com/typesafe/releases/",
     /** morphia  */
     resolvers += "morphia @ google" at "http://morphia.googlecode.com/svn/mavenrepo/"
   )
@@ -21,12 +22,12 @@ object Build extends Build {
     "org.scala-lang" % "scala-library"  % "2.10.2",
 
     /** sbt */
-    "org.scala-sbt" % "sbt" % "0.13.0" withSources(),
+    "org.scala-sbt" %% "sbt" % "0.13.0" withSources(),
 
     /** querydsl for mongodb */
-    "com.mysema.querydsl" % "querydsl-mongodb" % "3.2.4.BUILD-SNAPSHOT",
-    "com.mysema.querydsl" % "querydsl-scala"   % "3.2.4.BUILD-SNAPSHOT",
-    "com.mysema.querydsl" % "querydsl-apt"     % "3.2.4.BUILD-SNAPSHOT",
+    "com.mysema.querydsl" % "querydsl-mongodb" % "3.2.3",
+    "com.mysema.querydsl" % "querydsl-scala"   % "3.2.3",
+    "com.mysema.querydsl" % "querydsl-apt"     % "3.2.3",
     "com.mysema.querydsl" % "querydsl-codegen" % "0.5.9",
 
     /** google morphia mongo driver */
@@ -41,8 +42,8 @@ object Build extends Build {
      * http://spring.io/blog/2012/12/10/introducing-spring-scala/
      * https://github.com/spring-projects/spring-scala
      */
-    "org.springframework.scala" %% "spring-scala"       % "1.0.0.RC1",/* withSources() withJavadoc()*/
-    "org.springframework.data"  % "spring-data-mongodb" % "1.3.0.RC1"
+    "org.springframework.scala" %% "spring-scala"        % "1.0.0.RC1",/* withSources() withJavadoc()*/
+    "org.springframework.data"   % "spring-data-mongodb" % "1.3.0.RC1"
 //    "org.springframework" % "spring-core" % "3.0.5.RELEASE",
 //    "org.springframework" % "spring-context" % "3.0.5.RELEASE",
 //    "cglib" % "cglib" % "2.2",

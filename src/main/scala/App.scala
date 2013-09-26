@@ -1,7 +1,7 @@
 import configuration.MongoConfigMorphia
 import gd.wa.{QUser, User}
 import org.springframework.scala.context.function.FunctionalConfigApplicationContext
-import repo.UserRepository
+import repo.{Repository, UserRepository}
 
 object App {
 
