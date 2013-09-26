@@ -4,6 +4,7 @@ import com.google.code.morphia.Morphia
 import com.mongodb.Mongo
 import org.springframework.scala.context.function.{BeanLookupFunction, FunctionalConfiguration}
 import repo.UserRepository
+import services.UserService
 
 class MongoConfigMorphia extends FunctionalConfiguration {
 
@@ -17,6 +18,10 @@ class MongoConfigMorphia extends FunctionalConfiguration {
 
   val userRepository: BeanLookupFunction[UserRepository] = singleton() {
     new UserRepository(morphia().createDatastore(mongo(), "users-db"), morphia())
+  }
+
+  val userService: BeanLookupFunction[UserService] = singleton() {
+    new UserService(userRepository())
   }
 
 }

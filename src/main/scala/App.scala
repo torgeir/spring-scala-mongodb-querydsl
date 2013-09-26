@@ -1,27 +1,29 @@
 import configuration.MongoConfigMorphia
-import gd.wa.{QUser, User}
 import org.springframework.scala.context.function.FunctionalConfigApplicationContext
-import repo.{Repository, UserRepository}
+import services.UserService
 
 object App {
 
-  def main (args: Array[String]) = {
+  def main(args: Array[String]) = {
 
     val applicationContext = FunctionalConfigApplicationContext[MongoConfigMorphia]
-    val repo: UserRepository = applicationContext[UserRepository]
+    val userService = applicationContext[UserService]
 
-    repo.deleteAll()
+    userService.removeAllUsers()
 
-    Range(1, 100).foreach {
-      n =>
-        val user = if (n % 2 == 0) User("torgeir") else User("per")
-        repo.save(user)
+    Range(0, 101).foreach {
+      n => println(userService.createUser(s"user-$n@example.com", s"User $n"))
     }
 
-    import com.mysema.query.scala.Helpers._
+    println("number of users", userService.numberOfUsers)
 
-    val list = repo.query.where(QUser.name.equalsIgnoreCase("torgeir")).select
-    println(list.size) // 49
+    val email = "user-23@example.com"
+    val user = userService.findUserByUsername(email)
+    println("found user", user.getOrElse(s"no user found for $email"))
+
+    val user2 = userService.findUserByUsername(email)
+    println("equal users", user == user2, user.get, user2.get)
+
+    println(userService.findUserNumber(42))
   }
-
 }

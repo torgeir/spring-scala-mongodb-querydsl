@@ -10,7 +10,7 @@ object Build extends Build {
     /** spring scala */
     resolvers += "repo.springsource.org-milestone" at "https://repo.springsource.org/milestone",
     /** play iteratees */
-//    resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/repo/",
+    resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/repo/",
     resolvers += "Typesafe releases" at "http://repo.typesafe.com/typesafe/releases/",
     /** morphia  */
     resolvers += "morphia @ google" at "http://morphia.googlecode.com/svn/mavenrepo/"
@@ -22,7 +22,7 @@ object Build extends Build {
     "org.scala-lang" % "scala-library"  % "2.10.2",
 
     /** sbt */
-    "org.scala-sbt" %% "sbt" % "0.13.0" withSources(),
+    //"org.scala-sbt" %% "sbt" % "0.13.0" withSources(),
 
     /** querydsl for mongodb */
     "com.mysema.querydsl" % "querydsl-mongodb" % "3.2.3",
@@ -31,8 +31,8 @@ object Build extends Build {
     "com.mysema.querydsl" % "querydsl-codegen" % "0.5.9",
 
     /** google morphia mongo driver */
-    "com.google.code.morphia" % "morphia"            % "0.104",
-    "org.mongodb"             % "mongo-java-driver"  % "2.10.1" ,
+    "com.google.code.morphia" % "morphia" % "0.104",
+    "org.mongodb" % "mongo-java-driver" % "2.10.1",
 
     /** logging */
     "org.slf4j" % "slf4j-simple" % "1.7.5",
@@ -42,11 +42,11 @@ object Build extends Build {
      * http://spring.io/blog/2012/12/10/introducing-spring-scala/
      * https://github.com/spring-projects/spring-scala
      */
-    "org.springframework.scala" %% "spring-scala"        % "1.0.0.RC1",/* withSources() withJavadoc()*/
+    "org.springframework.scala" %% "spring-scala"        % "1.0.0.RC1", /* withSources() withJavadoc()*/
     "org.springframework.data"   % "spring-data-mongodb" % "1.3.0.RC1"
-//    "org.springframework" % "spring-core" % "3.0.5.RELEASE",
-//    "org.springframework" % "spring-context" % "3.0.5.RELEASE",
-//    "cglib" % "cglib" % "2.2",
+    //"org.springframework" % "spring-core" % "3.0.5.RELEASE",
+    //"org.springframework" % "spring-context" % "3.0.5.RELEASE",
+    //"cglib" % "cglib" % "2.2",
   )
 
   lazy val domain = Project(
@@ -55,7 +55,7 @@ object Build extends Build {
     settings = Project.defaultSettings ++ Seq(
       libraryDependencies := dependencies
     ))
-    .settings(commonSettings:_*)
+    .settings(commonSettings: _*)
 
   lazy val root = Project(
     id = "root-project",
@@ -64,15 +64,16 @@ object Build extends Build {
 
       libraryDependencies := dependencies,
 
-      unmanagedSourceDirectories in Compile <++= baseDirectory { base =>
-        Seq(base / "domain")
+      unmanagedSourceDirectories in Compile <++= baseDirectory {
+        base =>
+          Seq(base / "domain")
       },
 
       sourceGenerators in Compile <+=
         (sourceManaged in Compile, fullClasspath in Compile in domain, mainClass in Compile in domain, runner, streams)
           map createQuerydslClasses
     ))
-    .settings(commonSettings:_*)
+    .settings(commonSettings: _*)
     .dependsOn(domain)
 
 
