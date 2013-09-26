@@ -29,6 +29,7 @@ object CreateQuerydslClasses {
     exporter.export("gd.wa")
   }
 
+  /*
   class ScalaEntityWithStaticSerializer @Inject()(override val typeMappings: TypeMappings) extends ScalaEntitySerializer(typeMappings) {
 
     override def writeCompanionObject(model: EntityType, queryType: Type, writer: ScalaWriter) = {
@@ -42,4 +43,5 @@ object CreateQuerydslClasses {
       writer.end()
     }
   }
+  */
 }
