@@ -1,10 +1,7 @@
 import sbt._
-import sbt.Run._
 import Keys._
-import java.io.{File => JFile}
 
 object Build extends Build {
-
 
   val commonSettings = Seq(
     scalaVersion := "2.10.2",
@@ -23,10 +20,14 @@ object Build extends Build {
     "org.scala-lang" % "scala-compiler" % "2.10.2",
     "org.scala-lang" % "scala-library"  % "2.10.2",
 
+    /** sbt */
+    "org.scala-sbt" % "sbt" % "0.13.0" withSources(),
+
     /** querydsl for mongodb */
-    "com.mysema.querydsl" % "querydsl-mongodb" % "3.2.3",
-    "com.mysema.querydsl" % "querydsl-scala"   % "3.2.3",
-    "com.mysema.querydsl" % "querydsl-apt"     % "3.2.3",
+    "com.mysema.querydsl" % "querydsl-mongodb" % "3.2.4.BUILD-SNAPSHOT",
+    "com.mysema.querydsl" % "querydsl-scala"   % "3.2.4.BUILD-SNAPSHOT",
+    "com.mysema.querydsl" % "querydsl-apt"     % "3.2.4.BUILD-SNAPSHOT",
+    "com.mysema.querydsl" % "querydsl-codegen" % "0.5.9",
 
     /** google morphia mongo driver */
     "com.google.code.morphia" % "morphia"            % "0.104",
@@ -40,7 +41,7 @@ object Build extends Build {
      * http://spring.io/blog/2012/12/10/introducing-spring-scala/
      * https://github.com/spring-projects/spring-scala
      */
-    "org.springframework.scala" %% "spring-scala" % "1.0.0.RC1",/* withSources() withJavadoc()*/
+    "org.springframework.scala" %% "spring-scala"       % "1.0.0.RC1",/* withSources() withJavadoc()*/
     "org.springframework.data"  % "spring-data-mongodb" % "1.3.0.RC1"
 //    "org.springframework" % "spring-core" % "3.0.5.RELEASE",
 //    "org.springframework" % "spring-context" % "3.0.5.RELEASE",
@@ -59,7 +60,13 @@ object Build extends Build {
     id = "root-project",
     base = file("."),
     settings = Project.defaultSettings ++ Seq(
+
       libraryDependencies := dependencies,
+
+      unmanagedSourceDirectories in Compile <++= baseDirectory { base =>
+        Seq(base / "domain")
+      },
+
       sourceGenerators in Compile <+=
         (sourceManaged in Compile, fullClasspath in Compile in domain, mainClass in Compile in domain, runner, streams)
           map createQuerydslClasses
@@ -73,12 +80,12 @@ object Build extends Build {
                             mainClass: Option[String],
                             run: ScalaRun,
                             s: TaskStreams): Seq[File] = {
-    val scala = base / "scala"
+    val scala: File = base / "scala"
 
     // TODO sbt plugin for GenericExporter instead?
     run.run(mainClass.get, cp.files, Seq(scala.getAbsolutePath), s.log)
 
     IO.createDirectory(scala)
-    scala.listFiles.toIndexedSeq
+    (scala ** "*.scala").get
   }
 }

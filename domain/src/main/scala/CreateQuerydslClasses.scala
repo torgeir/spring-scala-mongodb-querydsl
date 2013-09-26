@@ -1,8 +1,11 @@
-import com.mysema.query.codegen.GenericExporter
+import com.google.code.morphia.annotations.Entity
+import com.mysema.codegen.model.Type
+import com.mysema.codegen.ScalaWriter
+import com.mysema.query.annotations._
+import com.mysema.query.codegen.{TypeMappings, EntityType, GenericExporter}
 import com.mysema.query.scala.{ScalaTypeMappings, ScalaEntitySerializer}
 import java.io.File
-import org.springframework.data.annotation.Transient
-import org.springframework.data.mongodb.core.mapping.Document
+import javax.inject.Inject
 
 object CreateQuerydslClasses {
 
@@ -12,12 +15,31 @@ object CreateQuerydslClasses {
 
     val exporter = new GenericExporter()
     exporter.setTargetFolder(new File(args(0)))
+    exporter.setEntityAnnotation(classOf[QueryEntity])
+    exporter.setSkipAnnotation(classOf[QueryTransient])
+    exporter.setSupertypeAnnotation(classOf[QuerySupertype])
+    exporter.setEmbeddableAnnotation(classOf[QueryEmbeddable])
+    exporter.setEmbeddedAnnotation(classOf[QueryEmbedded])
+    exporter.setSkipAnnotation(classOf[QueryExclude])
+
     exporter.setSerializerClass(classOf[ScalaEntitySerializer])
     exporter.setTypeMappingsClass(classOf[ScalaTypeMappings])
-    exporter.setEntityAnnotation(classOf[Document])
-    exporter.setSkipAnnotation(classOf[Transient])
     exporter.setCreateScalaSources(true)
-    exporter.export(classOf[User])
 
+    exporter.export("gd.wa")
+  }
+
+  class ScalaEntityWithStaticSerializer @Inject()(override val typeMappings: TypeMappings) extends ScalaEntitySerializer(typeMappings) {
+
+    override def writeCompanionObject(model: EntityType, queryType: Type, writer: ScalaWriter) = {
+      val queryTypeName = writer.getRawName(queryType)
+      val variable = model.getUncapSimpleName
+
+      writer.beginObject(queryTypeName + " extends "+queryTypeName+"(\""+variable+"\")")
+      writer.line("override def as(variable: String) = new ", queryTypeName, "(variable)")
+      writer.line("")
+      writer.line("val ", variable, " = new ", queryTypeName, "(\"", variable, "\")")
+      writer.end()
+    }
   }
 }
