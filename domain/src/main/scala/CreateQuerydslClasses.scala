@@ -1,11 +1,8 @@
 import com.google.code.morphia.annotations.Entity
-import com.mysema.codegen.model.Type
-import com.mysema.codegen.ScalaWriter
 import com.mysema.query.annotations._
-import com.mysema.query.codegen.{TypeMappings, EntityType, GenericExporter}
+import com.mysema.query.codegen.GenericExporter
 import com.mysema.query.scala.{ScalaTypeMappings, ScalaEntitySerializer}
 import java.io.File
-import javax.inject.Inject
 
 object CreateQuerydslClasses {
 

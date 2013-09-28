@@ -2,25 +2,27 @@ package configuration
 
 import com.google.code.morphia.Morphia
 import com.mongodb.Mongo
-import org.springframework.scala.context.function.{BeanLookupFunction, FunctionalConfiguration}
+import org.springframework.scala.context.function.FunctionalConfiguration
 import repo.UserRepository
 import services.UserService
+import log.HasNullLogger
 
 class MongoConfigMorphia extends FunctionalConfiguration {
 
-  val mongo: BeanLookupFunction[Mongo] = singleton() {
+  val mongo = singleton() {
     new Mongo("localhost")
   }
 
-  val morphia: BeanLookupFunction[Morphia] = singleton() {
+  val morphia = singleton() {
     new Morphia().mapPackage("gd.wa")
   }
 
-  val userRepository: BeanLookupFunction[UserRepository] = singleton() {
+  val userRepository = singleton() {
     new UserRepository(morphia().createDatastore(mongo(), "users-db"), morphia())
+      with HasNullLogger
   }
 
-  val userService: BeanLookupFunction[UserService] = singleton() {
+  val userService = singleton() {
     new UserService(userRepository())
   }
 

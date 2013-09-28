@@ -35,6 +35,7 @@ object Build extends Build {
     "org.mongodb" % "mongo-java-driver" % "2.10.1",
 
     /** logging */
+    "com.typesafe" %% "scalalogging-slf4j" % "1.0.1",
     "org.slf4j" % "slf4j-simple" % "1.7.5",
 
     /**

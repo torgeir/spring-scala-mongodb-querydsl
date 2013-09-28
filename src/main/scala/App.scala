@@ -12,7 +12,7 @@ object App {
     userService.removeAllUsers()
 
     Range(0, 101).foreach {
-      n => println(userService.createUser(s"user-$n@example.com", s"User $n"))
+      n => userService.createUser(s"user-$n@example.com", s"User $n")
     }
 
     println("number of users", userService.numberOfUsers)
