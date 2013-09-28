@@ -1,28 +1,27 @@
 package services
 
-import gd.wa.{QUser, User}
+import gd.wa.User
 import repo.UserRepository
 
 class UserService(repo: UserRepository) extends Service[User](repo) {
 
   import com.mysema.query.scala.Helpers._
+  import gd.wa.{QUser => user}
 
   def createUser(username: String, name: String): User = {
     findUserByUsername(username) match {
       case Some(user) => user
       case None => {
-        val user = User(username, name)
-        repo.save(user)
-        findUserByUsername(username).get
+        repo.save(User(username, name))
       }
     }
   }
 
-  def findUserByUsername(username: String) =
-    repo.query.where(QUser.username.eq(username)).single
+  def findUserByUsername(usernameToFind: String) =
+    repo.query.where(user.username.eq(usernameToFind)).single
 
   def findUserNumber(number: Int) =
-    repo.query.where(QUser.username.contains(number.toString)).single
+    repo.query.where(user.username.contains(number.toString)).single
 
   def numberOfUsers = repo.query.count()
 

@@ -9,6 +9,9 @@ abstract class Repository[Entity](val mongo: Datastore, morphia: Morphia, queryE
 
   def query: MorphiaQuery[Entity] = new MorphiaQuery[Entity](morphia, mongo, queryEntity)
 
-  def save(entity: Entity) = mongo.save(entity, WriteConcern.ACKNOWLEDGED)
+  def save(entity: Entity) = {
+    mongo.save(entity, WriteConcern.ACKNOWLEDGED)
+    entity
+  }
 
 }

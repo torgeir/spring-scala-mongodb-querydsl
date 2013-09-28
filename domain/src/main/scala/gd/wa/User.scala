@@ -1,17 +1,15 @@
 package gd.wa
 
 import org.bson.types.ObjectId
-import com.mysema.query.annotations.QueryEntity
-import com.google.code.morphia.annotations.Id
+import com.google.code.morphia.annotations.{Entity, Id}
+import scala.annotation.meta.field
 
-@QueryEntity
-case class User(@Id _id: ObjectId,
+@Entity
+case class User(@(Id @field) id: ObjectId,
                 username: String,
-                name: String) {
-
+                name: String) extends Document {
   private def this() = this(null, null, null)
-
-  override def toString = s"User(${_id}, $username, $name)"
+  override def toString = s"User($id, $username, $name)"
 }
 
 object User {

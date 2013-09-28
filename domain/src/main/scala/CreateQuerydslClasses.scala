@@ -15,7 +15,7 @@ object CreateQuerydslClasses {
 
     val exporter = new GenericExporter()
     exporter.setTargetFolder(new File(args(0)))
-    exporter.setEntityAnnotation(classOf[QueryEntity])
+    exporter.setEntityAnnotation(classOf[Entity])
     exporter.setSkipAnnotation(classOf[QueryTransient])
     exporter.setSupertypeAnnotation(classOf[QuerySupertype])
     exporter.setEmbeddableAnnotation(classOf[QueryEmbeddable])

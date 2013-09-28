@@ -2,7 +2,6 @@ package configuration
 
 import com.mongodb.Mongo
 import org.springframework.data.mongodb.core.{MongoOperations, MongoTemplate}
-import org.springframework.data.mongodb.repository.support.MongoRepositoryFactory
 import org.springframework.scala.context.function.{FunctionalConfiguration, BeanLookupFunction}
 
 @Deprecated
