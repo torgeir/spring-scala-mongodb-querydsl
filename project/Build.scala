@@ -13,7 +13,11 @@ object Build extends Build {
     resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/repo/",
     resolvers += "Typesafe releases" at "http://repo.typesafe.com/typesafe/releases/",
     /** morphia  */
-    resolvers += "morphia @ google" at "http://morphia.googlecode.com/svn/mavenrepo/"
+    resolvers += "morphia @ google" at "http://morphia.googlecode.com/svn/mavenrepo/",
+
+    /** macros */
+    resolvers += Resolver.sonatypeRepo("snapshots"),
+    addCompilerPlugin("org.scala-lang.plugins" % "macro-paradise" % "2.0.0-SNAPSHOT" cross CrossVersion.full)
   )
 
   val dependencies = Seq(
@@ -50,6 +54,14 @@ object Build extends Build {
     //"cglib" % "cglib" % "2.2",
   )
 
+  lazy val macros: Project = Project(
+    "macros",
+    file("macros"),
+    settings = Project.defaultSettings ++ Seq(
+      libraryDependencies <+= (scalaVersion)("org.scala-lang" % "scala-reflect" % _)
+    ))
+    .settings(commonSettings: _*)
+
   lazy val domain = Project(
     id = "domain",
     base = file("domain"),
@@ -66,8 +78,8 @@ object Build extends Build {
       libraryDependencies := dependencies,
 
       unmanagedSourceDirectories in Compile <++= baseDirectory {
-        base =>
-          Seq(base / "domain")
+        base => Seq(base / "domain",
+                    base / "macros")
       },
 
       sourceGenerators in Compile <+=
@@ -75,7 +87,7 @@ object Build extends Build {
           map createQuerydslClasses
     ))
     .settings(commonSettings: _*)
-    .dependsOn(domain)
+    .dependsOn(domain, macros)
 
 
   def createQuerydslClasses(base: File,

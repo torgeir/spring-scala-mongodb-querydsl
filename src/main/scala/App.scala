@@ -5,7 +5,7 @@ import services.UserService
 
 object App {
 
-  def main(args: Array[String]) = {
+  def main(args: Array[String]): Unit = {
 
     val applicationContext = FunctionalConfigApplicationContext[MongoConfigMorphia]
     val userService = applicationContext[UserService]
@@ -32,6 +32,9 @@ object App {
       u => userService.updateNameForUser(s"${u.name} with new name", u)
     }
     println(updatedUser42)
+
+    Macros.regex("[a-z]")
+    //Macros.regex("[a-z") // does not compile
 
   }
 }
